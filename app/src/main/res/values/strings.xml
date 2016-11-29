@@ -6,6 +6,8 @@
 
     <string name="btn_submit">Aceptar</string>
 
+    <string name="btn_register">Registrar</string>
+
     <string name="lblMAC">MAC</string>
 
 </resources>

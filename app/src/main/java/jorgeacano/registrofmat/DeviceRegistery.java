@@ -11,12 +11,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
-public class RegistroDispositivos extends AppCompatActivity {
+public class DeviceRegistery extends AppCompatActivity {
 
     private EditText MACField;
     private Button submitButton;
+    private final int COMPLETE_MAC_ADDRESS_LENGTH = 17;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class RegistroDispositivos extends AppCompatActivity {
         TextView email = (TextView) findViewById(R.id.lblUserEmail);
         email.setText(getIntent().getStringExtra("EMAIL"));
 
+        this.MACField = (EditText) findViewById(R.id.fieldMAC);
 
         setupMACFieldFormat();
         addSubmitButtonListener();
@@ -43,23 +47,37 @@ public class RegistroDispositivos extends AppCompatActivity {
             public void onClick(View v) {
 
                 String user = getIntent().getStringExtra("USER_NAME");
-                String MAC = MACField.getText().toString();
+                String mac = MACField.getText().toString();
 
-                registerDevice(user, MAC);
+                if(mac.length() == COMPLETE_MAC_ADDRESS_LENGTH) {
+                    //registerDevice(user, mac);
+                }
+                else{
+                    Toast.makeText(DeviceRegistery.this, "La dirección mac está incompleta.",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void registerDevice(String user, String mac) {
 
-        Socket socket = new Socket();
+        try {
+            PrintWriter outputToServer = new PrintWriter(
+                    ServerConnection.getInstance().getOutputStream());
 
-        //send user and device MAC to server to be registered
+            outputToServer.println(user);
+            outputToServer.println(mac);
 
-        Toast.makeText(RegistroDispositivos.this, "Dispositivo registrado.",
-                Toast.LENGTH_SHORT).show();
+            Toast.makeText(DeviceRegistery.this, "Dispositivo registrado.",
+                    Toast.LENGTH_SHORT).show();
 
-        cleanMACField();
+            cleanMACField();
+            outputToServer.close();
+        }catch (IOException ex){
+            Toast.makeText(DeviceRegistery.this, "Se perdió la conección con el servidor.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void cleanMACField() {
