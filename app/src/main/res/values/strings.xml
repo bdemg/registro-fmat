@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">RegistroFMAT</string>
+
+    <string name="lblPassword">Contraseña :</string>
+    <string name="lblUser">Usuario :</string>
+
+    <string name="btn_submit">Aceptar</string>
+
+    <string name="lblMAC">MAC</string>
+
+</resources>
