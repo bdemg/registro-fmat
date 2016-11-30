@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
 
 public class DeviceRegistery extends AppCompatActivity {
 
@@ -23,14 +22,14 @@ public class DeviceRegistery extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro_dispositivos);
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_registro_dispositivos );
 
         TextView username = (TextView) findViewById(R.id.lblUserName);
-        username.setText(getIntent().getStringExtra("USER_NAME"));
+        username.setText( getIntent().getStringExtra( IntentResourcesIDs.USER_NAME ) );
 
         TextView email = (TextView) findViewById(R.id.lblUserEmail);
-        email.setText(getIntent().getStringExtra("EMAIL"));
+        email.setText( getIntent().getStringExtra( IntentResourcesIDs.EMAIL ) );
 
         this.MACField = (EditText) findViewById(R.id.fieldMAC);
 
@@ -46,15 +45,15 @@ public class DeviceRegistery extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String user = getIntent().getStringExtra("USER_NAME");
+                String user = getIntent().getStringExtra( IntentResourcesIDs.USER_NAME );
                 String mac = MACField.getText().toString();
 
                 if(mac.length() == COMPLETE_MAC_ADDRESS_LENGTH) {
                     //registerDevice(user, mac);
                 }
                 else{
-                    Toast.makeText(DeviceRegistery.this, "La dirección mac está incompleta.",
-                            Toast.LENGTH_SHORT).show();
+                    NotifMessager.getInstance().showMessage(DeviceRegistery.this,
+                            NotifMessager.SERVER_CONNECTION_LOST);
                 }
             }
         });
@@ -69,14 +68,12 @@ public class DeviceRegistery extends AppCompatActivity {
             outputToServer.println(user);
             outputToServer.println(mac);
 
-            Toast.makeText(DeviceRegistery.this, "Dispositivo registrado.",
-                    Toast.LENGTH_SHORT).show();
+            NotifMessager.getInstance().showMessage(this, NotifMessager.DEVICE_REGISTERED);
 
             cleanMACField();
             outputToServer.close();
         }catch (IOException ex){
-            Toast.makeText(DeviceRegistery.this, "Se perdió la conección con el servidor.",
-                    Toast.LENGTH_SHORT).show();
+            NotifMessager.getInstance().showMessage(this,NotifMessager.SERVER_CONNECTION_LOST);
         }
     }
 

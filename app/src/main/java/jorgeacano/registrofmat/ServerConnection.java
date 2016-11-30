@@ -14,6 +14,9 @@ public class ServerConnection {
 
     private Socket socket;
 
+    private String SERVER_ADDRESS = "172.16.69.163";
+    private int SERVER_PORT_NUMBER = 8085;
+
     public static ServerConnection getInstance() {
         return ourInstance;
     }
@@ -22,9 +25,9 @@ public class ServerConnection {
     }
 
 
-    public void connectToServer(String ipAddress, int portnumber) throws IOException{
+    public void connectToServer() throws IOException{
 
-        socket = new Socket(ipAddress,portnumber);
+        socket = new Socket(this.SERVER_ADDRESS,this.SERVER_PORT_NUMBER);
     }
 
     public OutputStream getOutputStream() throws IOException{

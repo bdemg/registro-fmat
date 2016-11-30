@@ -19,9 +19,6 @@ public class Login extends AppCompatActivity {
     private EditText userField;
     private Button submitButton;
 
-    private String SERVER_ADDRESS = "192.168.0.2";
-    private int SERVER_PORT_NUMBER = 8085;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +49,7 @@ public class Login extends AppCompatActivity {
     private void verifyInformation(String user, String password) {
 
         try {
-            ServerConnection.getInstance().connectToServer(this.SERVER_ADDRESS, this.SERVER_PORT_NUMBER);
+            ServerConnection.getInstance().connectToServer();
 
             PrintWriter outputToServer = new PrintWriter(
                     ServerConnection.getInstance().getOutputStream() );
@@ -82,23 +79,22 @@ public class Login extends AppCompatActivity {
             }
             else {
                 //else notify that the password + user combo was incorrect
-                Toast.makeText(Login.this, "Usuario o contraseña incorrecta.",
-                        Toast.LENGTH_SHORT).show();
+                NotifMessager.getInstance().showMessage(this, NotifMessager.WRONG_CREDENTIALS);
 
                 outputToServer.close();
                 primitiveInputFromServer.close();
             }
         }catch (IOException ex){
-            Toast.makeText(Login.this, "Servidor inalcanzable.",
-                    Toast.LENGTH_SHORT).show();
+            NotifMessager.getInstance().showMessage(this, NotifMessager.SERVER_UNREACHABLE);
         }
     }
 
     private void enterRegistration( String userName, String email ){
 
         Intent intent = new Intent( getBaseContext(), DeviceRegistery.class );
-        intent.putExtra( "USER_NAME", userName );
-        intent.putExtra( "EMAIL", email );
-        startActivity(intent);
+        intent.putExtra( IntentResourcesIDs.USER_NAME, userName );
+        intent.putExtra( IntentResourcesIDs.EMAIL, email );
+        intent.putExtra( IntentResourcesIDs.REGISTRATION_NUMBER, userField.getText().toString() );
+        startActivity( intent );
     }
 }
