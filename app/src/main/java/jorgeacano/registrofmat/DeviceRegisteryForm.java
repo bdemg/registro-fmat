@@ -9,15 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class DeviceRegistery extends AppCompatActivity {
+public class DeviceRegisteryForm extends AppCompatActivity {
 
     private EditText MACField;
-    private Button submitButton;
     private final int COMPLETE_MAC_ADDRESS_LENGTH = 17;
 
     @Override
@@ -39,7 +37,7 @@ public class DeviceRegistery extends AppCompatActivity {
 
     private void addSubmitButtonListener() {
 
-        submitButton = (Button) findViewById(R.id.btnSubmitMAC);
+        Button submitButton = (Button) findViewById(R.id.btnSubmitMAC);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,8 +50,8 @@ public class DeviceRegistery extends AppCompatActivity {
                     //registerDevice(user, mac);
                 }
                 else{
-                    NotifMessager.getInstance().showMessage(DeviceRegistery.this,
-                            NotifMessager.SERVER_CONNECTION_LOST);
+                    NotifMessager.getInstance().showMessage(DeviceRegisteryForm.this,
+                            NotifMessager.INCOMPLETE_MAC);
                 }
             }
         });

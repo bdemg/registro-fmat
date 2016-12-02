@@ -10,4 +10,9 @@
 
     <string name="lblMAC">MAC de tu Dispositivo:</string>
 
+    <string name="lblDevice1">MAC de tu 1er Dispositivo:</string>
+    <string name="lblDevice2">MAC de tu 2ndo Dispositivo:</string>
+
+    <string name="lblUnlist">Eliminar del registro</string>
+
 </resources>

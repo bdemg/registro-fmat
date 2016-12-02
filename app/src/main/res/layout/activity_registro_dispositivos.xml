@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".DeviceRegistery">
+    tools:context=".DeviceRegisteryForm">
 
     <TextView
         android:id="@+id/lblUserName"
@@ -25,10 +25,9 @@
         android:layout_height="wrap_content"
         android:text="Email"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/lblUserName"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="40dp" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/lblMAC"
@@ -55,7 +54,7 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_register"
         android:id="@+id/btnSubmitMAC"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/fieldMAC"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
