@@ -87,7 +87,7 @@ public class DeviceUnlistingForm extends AppCompatActivity {
                     ServerConnection.getInstance().getOutputStream());
 
             outputToServer.println(user);
-            outputToServer.println(mac);
+            outputToServer.println(mac.toUpperCase());
 
             NotifMessager.getInstance().showMessage(this, NotifMessager.DEVICE_UNLISTED);
 

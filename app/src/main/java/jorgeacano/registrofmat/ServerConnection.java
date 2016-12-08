@@ -10,15 +10,15 @@ import java.net.Socket;
  */
 public class ServerConnection {
 
-    private static ServerConnection ourInstance = new ServerConnection();
+    private static ServerConnection serverConnection = new ServerConnection();
 
     private Socket socket;
 
-    private String SERVER_ADDRESS = "172.16.69.163";
+    private String SERVER_ADDRESS = "172.16.69.164";
     private int SERVER_PORT_NUMBER = 8085;
 
     public static ServerConnection getInstance() {
-        return ourInstance;
+        return serverConnection;
     }
 
     private ServerConnection() {

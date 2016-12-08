@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class LoginForm extends AppCompatActivity {
 
     private EditText passwordField;
-    private EditText userField;
+    private EditText matriculaField;
     private Button submitButton;
 
     @Override
@@ -29,14 +29,14 @@ public class LoginForm extends AppCompatActivity {
     private void addSubmitButtonListener() {
 
         passwordField = (EditText) findViewById(R.id.fieldPassword);
-        userField = (EditText) findViewById(R.id.fieldUser);
+        matriculaField = (EditText) findViewById(R.id.fieldUser);
         submitButton = (Button) findViewById(R.id.btnSubmit);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String user = userField.getText().toString();
+                String user = matriculaField.getText().toString();
                 String password = passwordField.getText().toString();
 
                 //verifyInformation(user, password);
@@ -54,7 +54,7 @@ public class LoginForm extends AppCompatActivity {
                     ServerConnection.getInstance().getOutputStream() );
 
             //send user and password
-            outputToServer.println(this.userField.getText().toString());
+            outputToServer.println(this.matriculaField.getText().toString());
             outputToServer.println(this.passwordField.getText().toString());
 
             //read a boolean to see if the user and password was correct
@@ -93,7 +93,7 @@ public class LoginForm extends AppCompatActivity {
         Intent intent = new Intent( getBaseContext(), DeviceRegisteryForm.class );
         intent.putExtra( IntentResourcesIDs.USER_NAME, userName );
         intent.putExtra( IntentResourcesIDs.EMAIL, email );
-        intent.putExtra( IntentResourcesIDs.REGISTRATION_NUMBER, userField.getText().toString() );
+        intent.putExtra(IntentResourcesIDs.REGISTRATION_NUMBER, matriculaField.getText().toString());
         startActivity( intent );
     }
 }

@@ -43,11 +43,11 @@ public class DeviceRegisteryForm extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String user = getIntent().getStringExtra( IntentResourcesIDs.USER_NAME );
+                String registrationNumber = getIntent().getStringExtra( IntentResourcesIDs.REGISTRATION_NUMBER );
                 String mac = MACField.getText().toString();
 
                 if(mac.length() == COMPLETE_MAC_ADDRESS_LENGTH) {
-                    //registerDevice(user, mac);
+                    //registerDevice(registrationNumber, mac);
                 }
                 else{
                     NotifMessager.getInstance().showMessage(DeviceRegisteryForm.this,
@@ -57,14 +57,14 @@ public class DeviceRegisteryForm extends AppCompatActivity {
         });
     }
 
-    private void registerDevice(String user, String mac) {
+    private void registerDevice(String registrationNumber, String mac) {
 
         try {
             PrintWriter outputToServer = new PrintWriter(
                     ServerConnection.getInstance().getOutputStream());
 
-            outputToServer.println(user);
-            outputToServer.println(mac);
+            outputToServer.println(registrationNumber);
+            outputToServer.println(mac.toUpperCase());
 
             NotifMessager.getInstance().showMessage(this, NotifMessager.DEVICE_REGISTERED);
 
