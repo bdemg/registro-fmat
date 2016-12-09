@@ -15,4 +15,6 @@
 
     <string name="lblUnlist">Eliminar del registro</string>
 
+    <string name="lblToUnlist">Eliminar un Dispositivo</string>
+
 </resources>

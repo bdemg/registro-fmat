@@ -1,5 +1,6 @@
 package jorgeacano.registrofmat;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -33,6 +34,25 @@ public class DeviceRegisteryForm extends AppCompatActivity {
 
         setupMACFieldFormat();
         addSubmitButtonListener();
+        addToUnlistFormButtonListener();
+    }
+
+    private void addToUnlistFormButtonListener() {
+
+        Button toUnlistFormButton = (Button) findViewById(R.id.ToUnlistDevicebutton);
+
+        toUnlistFormButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                enterUnlisting(
+                        getIntent().getStringExtra(IntentResourcesIDs.USER_NAME),
+                        getIntent().getStringExtra(IntentResourcesIDs.EMAIL),
+                        getIntent().getStringExtra(IntentResourcesIDs.REGISTRATION_NUMBER)
+                );
+
+            }
+        });
     }
 
     private void addSubmitButtonListener() {
@@ -114,5 +134,14 @@ public class DeviceRegisteryForm extends AppCompatActivity {
             }
         };
         MACField.setFilters(filters);
+    }
+
+    private void enterUnlisting( String userName, String email, String registrationNumber ){
+
+        Intent intent = new Intent( getBaseContext(), DeviceUnlistingForm.class );
+        intent.putExtra( IntentResourcesIDs.USER_NAME, userName );
+        intent.putExtra( IntentResourcesIDs.EMAIL, email );
+        intent.putExtra(IntentResourcesIDs.REGISTRATION_NUMBER, registrationNumber);
+        startActivity(intent);
     }
 }

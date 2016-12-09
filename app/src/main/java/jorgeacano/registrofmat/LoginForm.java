@@ -36,16 +36,16 @@ public class LoginForm extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String user = matriculaField.getText().toString();
+                String registrationNumber = matriculaField.getText().toString();
                 String password = passwordField.getText().toString();
 
-                //verifyInformation(user, password);
-                enterRegistration("pedro", "pedro@gmail.com");
+                //verifyInformation(registrationNumber.toLowerCase(), password);
+                enterRegistration("pedro", "pedro@gmail.com", "a1124536");
             }
         });
     }
 
-    private void verifyInformation(String user, String password) {
+    private void verifyInformation(String registrationNumber, String password) {
 
         try {
             ServerConnection.getInstance().connectToServer();
@@ -53,11 +53,11 @@ public class LoginForm extends AppCompatActivity {
             PrintWriter outputToServer = new PrintWriter(
                     ServerConnection.getInstance().getOutputStream() );
 
-            //send user and password
-            outputToServer.println(this.matriculaField.getText().toString());
-            outputToServer.println(this.passwordField.getText().toString());
+            //send registrationNumber and password
+            outputToServer.println(registrationNumber);
+            outputToServer.println(password);
 
-            //read a boolean to see if the user and password was correct
+            //read a boolean to see if the registrationNumber and password was correct
             DataInputStream primitiveInputFromServer = new DataInputStream(
                     ServerConnection.getInstance().getInputStream() );
             Boolean isUsernameAndPasswordCorrect = primitiveInputFromServer.readBoolean();
@@ -70,14 +70,14 @@ public class LoginForm extends AppCompatActivity {
                 String userName = stringInputFromServer.nextLine();
                 String email = stringInputFromServer.nextLine();
 
-                enterRegistration(userName, email);
+                enterRegistration(userName, email, registrationNumber);
 
                 outputToServer.close();
                 stringInputFromServer.close();
                 primitiveInputFromServer.close();
             }
             else {
-                //else notify that the password + user combo was incorrect
+                //else notify that the password + registrationNumber combo was incorrect
                 NotifMessager.getInstance().showMessage(this, NotifMessager.WRONG_CREDENTIALS);
 
                 outputToServer.close();
@@ -88,12 +88,12 @@ public class LoginForm extends AppCompatActivity {
         }
     }
 
-    private void enterRegistration( String userName, String email ){
+    private void enterRegistration( String userName, String email, String registrationNumber ){
 
         Intent intent = new Intent( getBaseContext(), DeviceRegisteryForm.class );
         intent.putExtra( IntentResourcesIDs.USER_NAME, userName );
         intent.putExtra( IntentResourcesIDs.EMAIL, email );
-        intent.putExtra(IntentResourcesIDs.REGISTRATION_NUMBER, matriculaField.getText().toString());
+        intent.putExtra(IntentResourcesIDs.REGISTRATION_NUMBER, registrationNumber);
         startActivity( intent );
     }
 }
