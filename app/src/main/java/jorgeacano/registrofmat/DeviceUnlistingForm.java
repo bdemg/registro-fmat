@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 
 public class DeviceUnlistingForm extends AppCompatActivity {
@@ -40,7 +41,33 @@ public class DeviceUnlistingForm extends AppCompatActivity {
         this.MACDevice2.setKeyListener(null);
 
         addUnlist1rstDeviceButtonListener();
+        addUnlist2ndDeviceButtonListener();
+
+        putUpRegisteredMACs();
     }
+
+
+    private void putUpRegisteredMACs() {
+
+        try {
+            String[] MACs = retriveMACs();
+
+            if(MACs.length == 1){
+
+                this.MACDevice1.setText(MACs[0]);
+            } else if(MACs.length == 2){
+
+                this.MACDevice1.setText(MACs[0]);
+                this.MACDevice2.setText(MACs[1]);
+            }
+
+        } catch (IOException e) {
+            NotifMessager.getInstance().showMessage(this, NotifMessager.SERVER_CONNECTION_LOST);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void addUnlist1rstDeviceButtonListener() {
 
@@ -53,7 +80,14 @@ public class DeviceUnlistingForm extends AppCompatActivity {
                 String user = getIntent().getStringExtra( IntentResourcesIDs.USER_NAME );
                 String mac = MACDevice1.getText().toString();
 
-                unlistDevice(user, mac);
+                if(mac.length() == COMPLETE_MAC_ADDRESS_LENGTH) {
+                    unlistDevice(user, mac);
+                    MACDevice1.setText("");
+                }
+                else{
+                    NotifMessager.getInstance().showMessage(DeviceUnlistingForm.this,
+                            NotifMessager.INCOMPLETE_MAC);
+                }
             }
         });
     }
@@ -71,6 +105,7 @@ public class DeviceUnlistingForm extends AppCompatActivity {
                 String mac = MACDevice2.getText().toString();
                 if(mac.length() == COMPLETE_MAC_ADDRESS_LENGTH) {
                     unlistDevice(user, mac);
+                    MACDevice2.setText("");
                 }
                 else{
                     NotifMessager.getInstance().showMessage(DeviceUnlistingForm.this,
@@ -94,10 +129,25 @@ public class DeviceUnlistingForm extends AppCompatActivity {
             outputToServer.close();
 
         }catch (IOException ex){
-            NotifMessager.getInstance().showMessage(this,NotifMessager.SERVER_CONNECTION_LOST);
+            NotifMessager.getInstance().showMessage(this, NotifMessager.SERVER_CONNECTION_LOST);
         }
     }
 
+
+    private String[] retriveMACs() throws IOException, ClassNotFoundException{
+
+        PrintWriter outputToServer = new PrintWriter(
+                ServerConnection.getInstance().getOutputStream());
+
+        outputToServer.println(ServiceCodes.REQUEST_REGISTERED_MACS);
+        outputToServer.println(getIntent().getStringExtra(IntentResourcesIDs.REGISTRATION_NUMBER));
+
+        ObjectInputStream inputFromServer =
+                new ObjectInputStream(ServerConnection.getInstance().getInputStream());
+
+        return (String[]) inputFromServer.readObject();
+
+    }
 
     private void setupMACFieldFormat(EditText MACField) {
         MACField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
