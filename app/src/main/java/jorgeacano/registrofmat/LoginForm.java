@@ -39,7 +39,7 @@ public class LoginForm extends AppCompatActivity {
                 String registrationNumber = matriculaField.getText().toString();
                 String password = passwordField.getText().toString();
 
-                //verifyInformation(registrationNumber.toLowerCase(), password);
+                //verifyInformation(registrationNumber, password);
                 enterRegistration("pedro", "pedro@gmail.com", "a1124536");
             }
         });
@@ -54,7 +54,7 @@ public class LoginForm extends AppCompatActivity {
                     ServerConnection.getInstance().getOutputStream() );
 
             //send registrationNumber and password
-            outputToServer.println(registrationNumber);
+            outputToServer.println(registrationNumber.toLowerCase());
             outputToServer.println(password);
 
             //read a boolean to see if the registrationNumber and password was correct

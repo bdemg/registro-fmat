@@ -83,7 +83,8 @@ public class DeviceRegisteryForm extends AppCompatActivity {
             PrintWriter outputToServer = new PrintWriter(
                     ServerConnection.getInstance().getOutputStream());
 
-            outputToServer.println(registrationNumber);
+            outputToServer.println(ServiceCodes.REGISTER_MAC);
+            outputToServer.println(registrationNumber.toLowerCase());
             outputToServer.println(mac.toUpperCase());
 
             NotifMessager.getInstance().showMessage(this, NotifMessager.DEVICE_REGISTERED);

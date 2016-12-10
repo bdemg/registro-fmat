@@ -77,7 +77,7 @@ public class DeviceUnlistingForm extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String user = getIntent().getStringExtra( IntentResourcesIDs.USER_NAME );
+                String user = getIntent().getStringExtra( IntentResourcesIDs.REGISTRATION_NUMBER );
                 String mac = MACDevice1.getText().toString();
 
                 if(mac.length() == COMPLETE_MAC_ADDRESS_LENGTH) {
@@ -101,7 +101,7 @@ public class DeviceUnlistingForm extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String user = getIntent().getStringExtra(IntentResourcesIDs.USER_NAME);
+                String user = getIntent().getStringExtra(IntentResourcesIDs.REGISTRATION_NUMBER);
                 String mac = MACDevice2.getText().toString();
                 if(mac.length() == COMPLETE_MAC_ADDRESS_LENGTH) {
                     unlistDevice(user, mac);
@@ -121,6 +121,7 @@ public class DeviceUnlistingForm extends AppCompatActivity {
             PrintWriter outputToServer = new PrintWriter(
                     ServerConnection.getInstance().getOutputStream());
 
+            outputToServer.println(ServiceCodes.UNLIST_MAC);
             outputToServer.println(user);
             outputToServer.println(mac.toUpperCase());
 
@@ -144,6 +145,9 @@ public class DeviceUnlistingForm extends AppCompatActivity {
 
         ObjectInputStream inputFromServer =
                 new ObjectInputStream(ServerConnection.getInstance().getInputStream());
+
+        inputFromServer.close();
+        outputToServer.close();
 
         return (String[]) inputFromServer.readObject();
 
