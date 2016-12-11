@@ -127,7 +127,6 @@ public class DeviceUnlistingForm extends AppCompatActivity {
 
             NotifMessager.getInstance().showMessage(this, NotifMessager.DEVICE_UNLISTED);
 
-            outputToServer.close();
 
         }catch (IOException ex){
             NotifMessager.getInstance().showMessage(this, NotifMessager.SERVER_CONNECTION_LOST);
@@ -146,10 +145,13 @@ public class DeviceUnlistingForm extends AppCompatActivity {
         ObjectInputStream inputFromServer =
                 new ObjectInputStream(ServerConnection.getInstance().getInputStream());
 
-        inputFromServer.close();
-        outputToServer.close();
+        String[] registeredMACs = null;
+        do{
 
-        return (String[]) inputFromServer.readObject();
+            registeredMACs = (String[]) inputFromServer.readObject();
+        }while(registeredMACs==null);
+
+        return registeredMACs;
 
     }
 

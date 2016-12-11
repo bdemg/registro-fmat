@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -67,7 +68,7 @@ public class DeviceRegisteryForm extends AppCompatActivity {
                 String mac = MACField.getText().toString();
 
                 if(mac.length() == COMPLETE_MAC_ADDRESS_LENGTH) {
-                    //registerDevice(registrationNumber, mac);
+                    registerDevice(registrationNumber, mac);
                 }
                 else{
                     NotifMessager.getInstance().showMessage(DeviceRegisteryForm.this,
@@ -80,19 +81,22 @@ public class DeviceRegisteryForm extends AppCompatActivity {
     private void registerDevice(String registrationNumber, String mac) {
 
         try {
+
             PrintWriter outputToServer = new PrintWriter(
                     ServerConnection.getInstance().getOutputStream());
 
             outputToServer.println(ServiceCodes.REGISTER_MAC);
+            outputToServer.flush();
             outputToServer.println(registrationNumber.toLowerCase());
+            outputToServer.flush();
             outputToServer.println(mac.toUpperCase());
+            outputToServer.flush();
 
             NotifMessager.getInstance().showMessage(this, NotifMessager.DEVICE_REGISTERED);
 
             cleanMACField();
-            outputToServer.close();
         }catch (IOException ex){
-            NotifMessager.getInstance().showMessage(this,NotifMessager.SERVER_CONNECTION_LOST);
+            NotifMessager.getInstance().showMessage(this, NotifMessager.SERVER_CONNECTION_LOST);
         }
     }
 

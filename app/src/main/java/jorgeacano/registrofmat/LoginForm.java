@@ -1,6 +1,7 @@
 package jorgeacano.registrofmat;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +23,12 @@ public class LoginForm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        StrictMode.ThreadPolicy policy = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD) {
+            policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
 
         addSubmitButtonListener();
     }
@@ -39,8 +46,7 @@ public class LoginForm extends AppCompatActivity {
                 String registrationNumber = matriculaField.getText().toString();
                 String password = passwordField.getText().toString();
 
-                //verifyInformation(registrationNumber, password);
-                enterRegistration("pedro", "pedro@gmail.com", "a1124536");
+                verifyInformation(registrationNumber, password);
             }
         });
     }
@@ -55,7 +61,9 @@ public class LoginForm extends AppCompatActivity {
 
             //send registrationNumber and password
             outputToServer.println(registrationNumber.toLowerCase());
+            outputToServer.flush();
             outputToServer.println(password);
+            outputToServer.flush();
 
             //read a boolean to see if the registrationNumber and password was correct
             DataInputStream primitiveInputFromServer = new DataInputStream(
@@ -65,16 +73,13 @@ public class LoginForm extends AppCompatActivity {
             if (isUsernameAndPasswordCorrect){
                 //if true call enter registration with active directory info
 
-                Scanner stringInputFromServer = new Scanner(
-                        ServerConnection.getInstance().getInputStream() );
-                String userName = stringInputFromServer.nextLine();
-                String email = stringInputFromServer.nextLine();
+                //Scanner stringInputFromServer = new Scanner(
+                //        ServerConnection.getInstance().getInputStream() );
+                //String userName = stringInputFromServer.nextLine();
+                //String email = stringInputFromServer.nextLine();
 
-                enterRegistration(userName, email, registrationNumber);
+                enterRegistration("aXXXXXXXX", "aXXXXXXXX@email.com", registrationNumber);
 
-                outputToServer.close();
-                stringInputFromServer.close();
-                primitiveInputFromServer.close();
             }
             else {
                 //else notify that the password + registrationNumber combo was incorrect
