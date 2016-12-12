@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 
@@ -43,29 +45,54 @@ public class DeviceUnlistingForm extends AppCompatActivity {
         addUnlist1rstDeviceButtonListener();
         addUnlist2ndDeviceButtonListener();
 
-        putUpRegisteredMACs();
-    }
-
-
-    private void putUpRegisteredMACs() {
-
         try {
-            String[] MACs = retriveMACs();
 
-            if(MACs.length == 1){
-
-                this.MACDevice1.setText(MACs[0]);
-            } else if(MACs.length == 2){
-
-                this.MACDevice1.setText(MACs[0]);
-                this.MACDevice2.setText(MACs[1]);
-            }
-
+            retriveMACs();
         } catch (IOException e) {
-            NotifMessager.getInstance().showMessage(this, NotifMessager.SERVER_CONNECTION_LOST);
+            NotifMessager.getInstance().showMessage(DeviceUnlistingForm.this,
+                    NotifMessager.SERVER_CONNECTION_LOST);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void retriveMACs() throws IOException, ClassNotFoundException{
+
+        PrintWriter outputToServer = new PrintWriter(
+                ServerConnection.getInstance().getOutputStream());
+
+        outputToServer.println(ServiceCodes.REQUEST_REGISTERED_MACS);
+        outputToServer.flush();
+        outputToServer.println(getIntent().getStringExtra(IntentResourcesIDs.REGISTRATION_NUMBER));
+        outputToServer.flush();
+
+        BufferedReader inputFromServer =
+                new BufferedReader(new InputStreamReader(
+                        ServerConnection.getInstance().getInputStream()));
+
+        String firstMAC;
+        String secondMAC;
+        do{
+
+            firstMAC = inputFromServer.readLine();
+        }while(firstMAC==null);
+
+        do{
+
+            secondMAC = inputFromServer.readLine();
+        }while(secondMAC==null);
+
+
+        putUpRegisteredMACs(firstMAC, secondMAC);
+
+    }
+
+
+    private void putUpRegisteredMACs(String firstMAC, String secondMAC) {
+
+        this.MACDevice1.setText(firstMAC);
+        this.MACDevice2.setText(secondMAC);
     }
 
 
@@ -95,7 +122,7 @@ public class DeviceUnlistingForm extends AppCompatActivity {
 
     private void addUnlist2ndDeviceButtonListener() {
 
-        Button unlist2ndDeviceButton = (Button) findViewById(R.id.unlist1rstDevicebutton);
+        Button unlist2ndDeviceButton = (Button) findViewById(R.id.unlist2ndtDevicebutton);
 
         unlist2ndDeviceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +142,7 @@ public class DeviceUnlistingForm extends AppCompatActivity {
         });
     }
 
+
     private void unlistDevice(String user, String mac) {
 
         try {
@@ -122,8 +150,9 @@ public class DeviceUnlistingForm extends AppCompatActivity {
                     ServerConnection.getInstance().getOutputStream());
 
             outputToServer.println(ServiceCodes.UNLIST_MAC);
-            outputToServer.println(user);
+            outputToServer.flush();
             outputToServer.println(mac.toUpperCase());
+            outputToServer.flush();
 
             NotifMessager.getInstance().showMessage(this, NotifMessager.DEVICE_UNLISTED);
 
@@ -133,27 +162,6 @@ public class DeviceUnlistingForm extends AppCompatActivity {
         }
     }
 
-
-    private String[] retriveMACs() throws IOException, ClassNotFoundException{
-
-        PrintWriter outputToServer = new PrintWriter(
-                ServerConnection.getInstance().getOutputStream());
-
-        outputToServer.println(ServiceCodes.REQUEST_REGISTERED_MACS);
-        outputToServer.println(getIntent().getStringExtra(IntentResourcesIDs.REGISTRATION_NUMBER));
-
-        ObjectInputStream inputFromServer =
-                new ObjectInputStream(ServerConnection.getInstance().getInputStream());
-
-        String[] registeredMACs = null;
-        do{
-
-            registeredMACs = (String[]) inputFromServer.readObject();
-        }while(registeredMACs==null);
-
-        return registeredMACs;
-
-    }
 
     private void setupMACFieldFormat(EditText MACField) {
         MACField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
