@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -73,12 +75,23 @@ public class LoginForm extends AppCompatActivity {
             if (isUsernameAndPasswordCorrect){
                 //if true call enter registration with active directory info
 
-                //Scanner stringInputFromServer = new Scanner(
-                //        ServerConnection.getInstance().getInputStream() );
-                //String userName = stringInputFromServer.nextLine();
-                //String email = stringInputFromServer.nextLine();
+                BufferedReader stringInputFromServer = new BufferedReader(
+                        new InputStreamReader( ServerConnection.getInstance().getInputStream() ) );
 
-                enterRegistration("aXXXXXXXX", "aXXXXXXXX@email.com", registrationNumber);
+                String userName;
+                do{
+
+                    userName = stringInputFromServer.readLine();
+                }while ( userName==null );
+
+                String email;
+                do{
+
+                    email = stringInputFromServer.readLine();
+                }while ( email==null );
+
+
+                enterRegistration(userName, email, registrationNumber);
 
             }
             else {
