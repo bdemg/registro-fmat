@@ -15,7 +15,7 @@ public class ServerConnection {
     private Socket socket;
 
     //private String SERVER_ADDRESS = "172.16.69.164";
-    private String SERVER_ADDRESS = "192.168.0.14";
+    private String SERVER_ADDRESS = "172.16.69.118";
     private int SERVER_PORT_NUMBER = 8086;
 
     public static ServerConnection getInstance() {
